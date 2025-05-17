@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.proj.mapper.ProjTenantInfoMapper">
+    
+    <resultMap type="ProjTenantInfo" id="ProjTenantInfoResult">
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="name"    column="name"    />
+        <result property="phone"    column="phone"    />
+        <result property="email"    column="email"    />
+        <result property="address"    column="address"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="deleteTime"    column="delete_time"    />
+        <result property="gender"    column="gender"    />
+        <result property="age"    column="age"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="ethnicity"    column="ethnicity"    />
+        <result property="education"    column="education"    />
+        <result property="company"    column="company"    />
+        <result property="hireDate"    column="hire_date"    />
+        <result property="leaveDate"    column="leave_date"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="isEmployed"    column="is_employed"    />
+        <result property="leaveReason"    column="leave_reason"    />
+        <result property="resignationCert"    column="resignation_cert"    />
+        <result property="department"    column="department"    />
+        <result property="position"    column="position"    />
+        <result property="jobLevel"    column="job_level"    />
+        <result property="employeeId"    column="employee_id"    />
+        <result property="creator"    column="creator"    />
+        <result property="modifier"    column="modifier"    />
+        <result property="licensePlate"    column="license_plate"    />
+        <result property="emergencyContact"    column="emergency_contact"    />
+        <result property="emergencyPhone"    column="emergency_phone"    />
+        <result property="maritalStatus"    column="marital_status"    />
+        <result property="contactAddress"    column="contact_address"    />
+        <result property="entryTime"    column="entry_time"    />
+    </resultMap>
+
+    <sql id="selectProjTenantInfoVo">
+        select tenant_id, user_id, id_card, name, phone, email, address, create_time, update_time, is_deleted, delete_time, gender, age, birthday, ethnicity, education, company, hire_date, leave_date, avatar, is_employed, leave_reason, resignation_cert, department, position, job_level, employee_id, creator, modifier, license_plate, emergency_contact, emergency_phone, marital_status, contact_address, entry_time from proj_tenant_info
+    </sql>
+
+    <select id="selectProjTenantInfoList" parameterType="ProjTenantInfo" resultMap="ProjTenantInfoResult">
+        <include refid="selectProjTenantInfoVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="idCard != null  and idCard != ''"> and id_card = #{idCard}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="isDeleted != null  and isDeleted != ''"> and is_deleted = #{isDeleted}</if>
+            <if test="deleteTime != null "> and delete_time = #{deleteTime}</if>
+            <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="birthday != null "> and birthday = #{birthday}</if>
+            <if test="ethnicity != null  and ethnicity != ''"> and ethnicity = #{ethnicity}</if>
+            <if test="education != null  and education != ''"> and education = #{education}</if>
+            <if test="company != null  and company != ''"> and company = #{company}</if>
+            <if test="hireDate != null "> and hire_date = #{hireDate}</if>
+            <if test="leaveDate != null "> and leave_date = #{leaveDate}</if>
+            <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
+            <if test="isEmployed != null  and isEmployed != ''"> and is_employed = #{isEmployed}</if>
+            <if test="leaveReason != null  and leaveReason != ''"> and leave_reason = #{leaveReason}</if>
+            <if test="resignationCert != null  and resignationCert != ''"> and resignation_cert = #{resignationCert}</if>
+            <if test="department != null  and department != ''"> and department = #{department}</if>
+            <if test="position != null  and position != ''"> and position = #{position}</if>
+            <if test="jobLevel != null  and jobLevel != ''"> and job_level = #{jobLevel}</if>
+            <if test="employeeId != null  and employeeId != ''"> and employee_id = #{employeeId}</if>
+            <if test="creator != null  and creator != ''"> and creator = #{creator}</if>
+            <if test="modifier != null  and modifier != ''"> and modifier = #{modifier}</if>
+            <if test="licensePlate != null  and licensePlate != ''"> and license_plate = #{licensePlate}</if>
+            <if test="emergencyContact != null  and emergencyContact != ''"> and emergency_contact = #{emergencyContact}</if>
+            <if test="emergencyPhone != null  and emergencyPhone != ''"> and emergency_phone = #{emergencyPhone}</if>
+            <if test="maritalStatus != null  and maritalStatus != ''"> and marital_status = #{maritalStatus}</if>
+            <if test="contactAddress != null  and contactAddress != ''"> and contact_address = #{contactAddress}</if>
+            <if test="entryTime != null "> and entry_time = #{entryTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectProjTenantInfoByTenantId" parameterType="Long" resultMap="ProjTenantInfoResult">
+        <include refid="selectProjTenantInfoVo"/>
+        where tenant_id = #{tenantId}
+    </select>
+
+    <insert id="insertProjTenantInfo" parameterType="ProjTenantInfo" useGeneratedKeys="true" keyProperty="tenantId">
+        insert into proj_tenant_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="idCard != null">id_card,</if>
+            <if test="name != null">name,</if>
+            <if test="phone != null">phone,</if>
+            <if test="email != null">email,</if>
+            <if test="address != null">address,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="deleteTime != null">delete_time,</if>
+            <if test="gender != null">gender,</if>
+            <if test="age != null">age,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="ethnicity != null">ethnicity,</if>
+            <if test="education != null">education,</if>
+            <if test="company != null">company,</if>
+            <if test="hireDate != null">hire_date,</if>
+            <if test="leaveDate != null">leave_date,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="isEmployed != null">is_employed,</if>
+            <if test="leaveReason != null">leave_reason,</if>
+            <if test="resignationCert != null">resignation_cert,</if>
+            <if test="department != null">department,</if>
+            <if test="position != null">position,</if>
+            <if test="jobLevel != null">job_level,</if>
+            <if test="employeeId != null">employee_id,</if>
+            <if test="creator != null">creator,</if>
+            <if test="modifier != null">modifier,</if>
+            <if test="licensePlate != null">license_plate,</if>
+            <if test="emergencyContact != null">emergency_contact,</if>
+            <if test="emergencyPhone != null">emergency_phone,</if>
+            <if test="maritalStatus != null">marital_status,</if>
+            <if test="contactAddress != null">contact_address,</if>
+            <if test="entryTime != null">entry_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="idCard != null">#{idCard},</if>
+            <if test="name != null">#{name},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="address != null">#{address},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="deleteTime != null">#{deleteTime},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="age != null">#{age},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="ethnicity != null">#{ethnicity},</if>
+            <if test="education != null">#{education},</if>
+            <if test="company != null">#{company},</if>
+            <if test="hireDate != null">#{hireDate},</if>
+            <if test="leaveDate != null">#{leaveDate},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="isEmployed != null">#{isEmployed},</if>
+            <if test="leaveReason != null">#{leaveReason},</if>
+            <if test="resignationCert != null">#{resignationCert},</if>
+            <if test="department != null">#{department},</if>
+            <if test="position != null">#{position},</if>
+            <if test="jobLevel != null">#{jobLevel},</if>
+            <if test="employeeId != null">#{employeeId},</if>
+            <if test="creator != null">#{creator},</if>
+            <if test="modifier != null">#{modifier},</if>
+            <if test="licensePlate != null">#{licensePlate},</if>
+            <if test="emergencyContact != null">#{emergencyContact},</if>
+            <if test="emergencyPhone != null">#{emergencyPhone},</if>
+            <if test="maritalStatus != null">#{maritalStatus},</if>
+            <if test="contactAddress != null">#{contactAddress},</if>
+            <if test="entryTime != null">#{entryTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjTenantInfo" parameterType="ProjTenantInfo">
+        update proj_tenant_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="idCard != null">id_card = #{idCard},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="deleteTime != null">delete_time = #{deleteTime},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="ethnicity != null">ethnicity = #{ethnicity},</if>
+            <if test="education != null">education = #{education},</if>
+            <if test="company != null">company = #{company},</if>
+            <if test="hireDate != null">hire_date = #{hireDate},</if>
+            <if test="leaveDate != null">leave_date = #{leaveDate},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="isEmployed != null">is_employed = #{isEmployed},</if>
+            <if test="leaveReason != null">leave_reason = #{leaveReason},</if>
+            <if test="resignationCert != null">resignation_cert = #{resignationCert},</if>
+            <if test="department != null">department = #{department},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="jobLevel != null">job_level = #{jobLevel},</if>
+            <if test="employeeId != null">employee_id = #{employeeId},</if>
+            <if test="creator != null">creator = #{creator},</if>
+            <if test="modifier != null">modifier = #{modifier},</if>
+            <if test="licensePlate != null">license_plate = #{licensePlate},</if>
+            <if test="emergencyContact != null">emergency_contact = #{emergencyContact},</if>
+            <if test="emergencyPhone != null">emergency_phone = #{emergencyPhone},</if>
+            <if test="maritalStatus != null">marital_status = #{maritalStatus},</if>
+            <if test="contactAddress != null">contact_address = #{contactAddress},</if>
+            <if test="entryTime != null">entry_time = #{entryTime},</if>
+        </trim>
+        where tenant_id = #{tenantId}
+    </update>
+
+    <delete id="deleteProjTenantInfoByTenantId" parameterType="Long">
+        delete from proj_tenant_info where tenant_id = #{tenantId}
+    </delete>
+
+    <delete id="deleteProjTenantInfoByTenantIds" parameterType="String">
+        delete from proj_tenant_info where tenant_id in 
+        <foreach item="tenantId" collection="array" open="(" separator="," close=")">
+            #{tenantId}
+        </foreach>
+    </delete>
+</mapper>
