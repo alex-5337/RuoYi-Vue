@@ -1,14 +1,22 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="用户ID" prop="userId">
+      <el-form-item label="工号" prop="employeeId">
+        <el-input
+          v-model="queryParams.employeeId"
+          placeholder="请输入工号"
+          clearable
+          @keyup.enter="handleQuery"
+        />
+      </el-form-item>
+      <!-- <el-form-item label="用户ID" prop="userId">
         <el-input
           v-model="queryParams.userId"
           placeholder="请输入用户ID"
           clearable
           @keyup.enter="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="身份证号" prop="idCard">
         <el-input
           v-model="queryParams.idCard"
@@ -33,22 +41,22 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="邮箱" prop="email">
+      <!-- <el-form-item label="邮箱" prop="email">
         <el-input
           v-model="queryParams.email"
           placeholder="请输入邮箱"
           clearable
           @keyup.enter="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="地址" prop="address">
+      </el-form-item> -->
+      <!-- <el-form-item label="地址" prop="address">
         <el-input
           v-model="queryParams.address"
           placeholder="请输入地址"
           clearable
           @keyup.enter="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="是否删除" prop="isDeleted">
         <el-select v-model="queryParams.isDeleted" placeholder="请选择是否删除" clearable style="min-width: 100px;">
           <el-option
@@ -59,15 +67,15 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="删除时间" prop="deleteTime">
+      <!-- <el-form-item label="删除时间" prop="deleteTime">
         <el-date-picker clearable
           v-model="queryParams.deleteTime"
           type="date"
           value-format="YYYY-MM-DD"
           placeholder="请选择删除时间">
         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="性别" prop="gender">
+      </el-form-item> -->
+      <!-- <el-form-item label="性别" prop="gender">
         <el-select v-model="queryParams.gender" placeholder="请选择性别" clearable style="min-width: 100px;">
           <el-option
             v-for="dict in sys_user_sex"
@@ -84,15 +92,15 @@
           clearable
           @keyup.enter="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="生日" prop="birthday">
+      </el-form-item> -->
+      <!-- <el-form-item label="生日" prop="birthday">
         <el-date-picker clearable
           v-model="queryParams.birthday"
           type="date"
           value-format="YYYY-MM-DD"
           placeholder="请选择生日">
         </el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="民族" prop="ethnicity">
         <el-input
           v-model="queryParams.ethnicity"
@@ -110,11 +118,15 @@
         />
       </el-form-item>
       <el-form-item label="工作单位" prop="company">
-        <el-input
+        <el-tree-select
           v-model="queryParams.company"
-          placeholder="请输入工作单位"
+          :data="companyOptions"
+          :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
+          value-key="deptId"
+          placeholder="选择公司"
+          check-strictly
           clearable
-          @keyup.enter="handleQuery"
+          style="min-width:200px;"
         />
       </el-form-item>
       <el-form-item label="入职时间" prop="hireDate">
@@ -133,14 +145,14 @@
           placeholder="请选择离职时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="头像" prop="avatar">
+      <!-- <el-form-item label="头像" prop="avatar">
         <el-input
           v-model="queryParams.avatar"
           placeholder="请输入头像"
           clearable
           @keyup.enter="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="是否在职" prop="isEmployed">
         <el-select v-model="queryParams.isEmployed" placeholder="请选择是否在职" clearable style="min-width: 100px;">
           <el-option
@@ -151,20 +163,30 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="离职证明" prop="resignationCert">
+      <!-- <el-form-item label="离职证明" prop="resignationCert">
         <el-input
           v-model="queryParams.resignationCert"
           placeholder="请输入离职证明"
           clearable
           @keyup.enter="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="所在部门" prop="department">
-        <el-input
+        <!-- <el-input
           v-model="queryParams.department"
           placeholder="请输入所在部门"
           clearable
           @keyup.enter="handleQuery"
+        /> -->
+        <el-tree-select
+          v-model="queryParams.department"
+          :data="companyOptions"
+          :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
+          value-key="deptId"
+          placeholder="选择公司"
+          check-strictly
+          clearable
+          style="min-width:200px;"
         />
       </el-form-item>
       <el-form-item label="岗位" prop="position">
@@ -175,38 +197,30 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="职级" prop="jobLevel">
+      <!-- <el-form-item label="职级" prop="jobLevel">
         <el-input
           v-model="queryParams.jobLevel"
           placeholder="请输入职级"
           clearable
           @keyup.enter="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="工号" prop="employeeId">
-        <el-input
-          v-model="queryParams.employeeId"
-          placeholder="请输入工号"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建人" prop="creator">
+      </el-form-item> -->
+      <!-- <el-form-item label="创建人" prop="creator">
         <el-input
           v-model="queryParams.creator"
           placeholder="请输入创建人"
           clearable
           @keyup.enter="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="修改人" prop="modifier">
+      </el-form-item> -->
+      <!-- <el-form-item label="修改人" prop="modifier">
         <el-input
           v-model="queryParams.modifier"
           placeholder="请输入修改人"
           clearable
           @keyup.enter="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="车牌号" prop="licensePlate">
         <el-input
           v-model="queryParams.licensePlate"
@@ -215,23 +229,23 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="紧急联系人" prop="emergencyContact">
+      <!-- <el-form-item label="紧急联系人" prop="emergencyContact">
         <el-input
           v-model="queryParams.emergencyContact"
           placeholder="请输入紧急联系人"
           clearable
           @keyup.enter="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="紧急联系人电话" prop="emergencyPhone">
+      </el-form-item> -->
+      <!-- <el-form-item label="紧急联系人电话" prop="emergencyPhone">
         <el-input
           v-model="queryParams.emergencyPhone"
           placeholder="请输入紧急联系人电话"
           clearable
           @keyup.enter="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="婚姻状况" prop="maritalStatus">
+      </el-form-item> -->
+      <!-- <el-form-item label="婚姻状况" prop="maritalStatus">
         <el-select v-model="queryParams.maritalStatus" placeholder="请选择婚姻状况" clearable style="min-width: 100px;">
           <el-option
             v-for="dict in sys_marriage"
@@ -240,23 +254,23 @@
             :value="dict.value"
           />
         </el-select>
-      </el-form-item>
-      <el-form-item label="联系地址" prop="contactAddress">
+      </el-form-item> -->
+      <!-- <el-form-item label="联系地址" prop="contactAddress">
         <el-input
           v-model="queryParams.contactAddress"
           placeholder="请输入联系地址"
           clearable
           @keyup.enter="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="入行时间" prop="entryTime">
+      </el-form-item> -->
+      <!-- <el-form-item label="入行时间" prop="entryTime">
         <el-date-picker clearable
           v-model="queryParams.entryTime"
           type="date"
           value-format="YYYY-MM-DD"
           placeholder="请选择入行时间">
         </el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -459,7 +473,14 @@
           <el-input v-model="form.education" placeholder="请输入学历" />
         </el-form-item>
         <el-form-item label="工作单位" prop="company">
-          <el-input v-model="form.company" placeholder="请输入工作单位" />
+          <el-select v-model="form.company" placeholder="请选择工作单位" filterable allow-create remote reserve-keyword style="min-width: 200px;">
+            <el-option
+              v-for="item in companyOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="入职时间" prop="hireDate">
           <el-date-picker clearable
@@ -556,6 +577,7 @@
 
 <script setup name="ProjTenantInfo">
 import { listProjTenantInfo, getProjTenantInfo, delProjTenantInfo, addProjTenantInfo, updateProjTenantInfo } from "@/api/proj/ProjTenantInfo"
+import { listDept } from '@/api/system/dept'; // 假设接口路径，需根据实际情况修改
 
 const { proxy } = getCurrentInstance()
 const { sys_marriage, sys_yes_no, sys_user_sex } = proxy.useDict('sys_marriage', 'sys_yes_no', 'sys_user_sex')
@@ -581,7 +603,7 @@ const data = reactive({
     phone: null,
     email: null,
     address: null,
-    isDeleted: null,
+    isDeleted: 'N',
     deleteTime: null,
     gender: null,
     age: null,
@@ -592,7 +614,7 @@ const data = reactive({
     hireDate: null,
     leaveDate: null,
     avatar: null,
-    isEmployed: null,
+    isEmployed: 'Y',
     leaveReason: null,
     resignationCert: null,
     department: null,
@@ -748,5 +770,20 @@ function handleExport() {
   }, `ProjTenantInfo_${new Date().getTime()}.xlsx`)
 }
 
-getList()
+const companyOptions = ref([]);
+
+const fetchCompanyOptions = async () => {
+  try {
+    const response = await listDept();
+    companyOptions.value = proxy.handleTree(response.data, "deptId")
+  } catch (error) {
+    console.error('获取部门列表失败:', error);
+  }
+};
+
+// 在合适的地方调用fetchCompanyOptions，例如onMounted
+onMounted(() => {
+  fetchCompanyOptions();
+  getList();
+});
 </script>
