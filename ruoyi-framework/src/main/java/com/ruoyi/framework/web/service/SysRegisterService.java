@@ -84,7 +84,11 @@ public class SysRegisterService
             }
             else
             {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.REGISTER, MessageUtils.message("user.register.success")));
+                // 设置默认角色ID为2
+                sysUser.setRoleIds(new Long[]{2L});
+                // 设置用户角色
+                userService.updateUser(sysUser);
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.REGISTER, MessageUtils.message("user.register.success")));        
             }
         }
         return msg;
