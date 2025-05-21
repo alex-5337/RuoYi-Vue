@@ -1,6 +1,6 @@
 {
-    "name" : "若依移动端",
-    "appid" : "__UNI__25A9D80",
+    "name" : "若依",
+    "appid" : "__UNI__01EC2D0",
     "description" : "",
     "versionName" : "1.2.0",
     "versionCode" : "100",
@@ -66,6 +66,21 @@
         "router" : {
             "mode" : "hash",
             "base" : "./"
+        },
+        "optimization" : {
+            "treeShaking" : {
+                "enable" : true
+            }
+        },
+        "unipush" : {
+            "enable" : false
+        },
+        "uniStatistics" : {
+            "enable" : true
         }
+    },
+    "locale" : "auto",
+    "uniStatistics" : {
+        "version" : "2"
     }
 }

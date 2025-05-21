@@ -390,6 +390,9 @@
           <span>{{ parseTime(scope.row.entryTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
+        <el-table-column label="申请原因" align="center" prop="applyReason" />
+        <el-table-column label="续住原因" align="center" prop="renewalReason" />
+        <el-table-column label="状态" align="center" prop="statue" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['proj:ProjTenantInfo:edit']">修改</el-button>
@@ -564,6 +567,15 @@
             placeholder="请选择入行时间">
           </el-date-picker>
         </el-form-item>
+          <el-form-item label="申请原因" prop="applyReason">
+            <el-input v-model="form.applyReason" placeholder="请输入申请原因" />
+          </el-form-item>
+          <el-form-item label="续住原因" prop="renewalReason">
+            <el-input v-model="form.renewalReason" placeholder="请输入续住原因" />
+          </el-form-item>
+          <el-form-item label="状态" prop="statue">
+            <el-input v-model="form.statue" placeholder="请输入状态" />
+          </el-form-item>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -628,7 +640,10 @@ const data = reactive({
     emergencyPhone: null,
     maritalStatus: null,
     contactAddress: null,
-    entryTime: null
+      entryTime: null,
+      applyReason: null,
+      renewalReason: null,
+      statue: null
   },
   rules: {
   }
@@ -689,7 +704,10 @@ function reset() {
     emergencyPhone: null,
     maritalStatus: null,
     contactAddress: null,
-    entryTime: null
+    entryTime: null,
+    applyReason: null,
+    renewalReason: null,
+    statue: null
   }
   proxy.resetForm("ProjTenantInfoRef")
 }

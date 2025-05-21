@@ -7,7 +7,7 @@ import com.ruoyi.proj.domain.ProjTenantInfo;
  * 租客信息Mapper接口
  * 
  * @author alex
- * @date 2025-05-17
+ * @date 2025-05-21
  */
 public interface ProjTenantInfoMapper 
 {

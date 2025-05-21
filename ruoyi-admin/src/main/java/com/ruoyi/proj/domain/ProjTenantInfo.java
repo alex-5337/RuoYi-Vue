@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 租客信息对象 proj_tenant_info
  * 
  * @author alex
- * @date 2025-05-17
+ * @date 2025-05-21
  */
 public class ProjTenantInfo extends BaseEntity
 {
@@ -152,6 +152,18 @@ public class ProjTenantInfo extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "入行时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date entryTime;
+
+    /** 申请原因 */
+    @Excel(name = "申请原因")
+    private String applyReason;
+
+    /** 续住原因 */
+    @Excel(name = "续住原因")
+    private String renewalReason;
+
+    /** 状态 */
+    @Excel(name = "状态")
+    private String statue;
 
     public void setTenantId(Long tenantId) 
     {
@@ -483,6 +495,36 @@ public class ProjTenantInfo extends BaseEntity
         return entryTime;
     }
 
+    public void setApplyReason(String applyReason) 
+    {
+        this.applyReason = applyReason;
+    }
+
+    public String getApplyReason() 
+    {
+        return applyReason;
+    }
+
+    public void setRenewalReason(String renewalReason) 
+    {
+        this.renewalReason = renewalReason;
+    }
+
+    public String getRenewalReason() 
+    {
+        return renewalReason;
+    }
+
+    public void setStatue(String statue) 
+    {
+        this.statue = statue;
+    }
+
+    public String getStatue() 
+    {
+        return statue;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -521,6 +563,9 @@ public class ProjTenantInfo extends BaseEntity
             .append("maritalStatus", getMaritalStatus())
             .append("contactAddress", getContactAddress())
             .append("entryTime", getEntryTime())
+            .append("applyReason", getApplyReason())
+            .append("renewalReason", getRenewalReason())
+            .append("statue", getStatue())
             .toString();
     }
 }

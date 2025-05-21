@@ -91,7 +91,7 @@
   }
 
   function changeGrid(e) {
-    proxy.$modal.showToast('模块建设中~')
+    proxy.$tab.reLaunch("/pages/dormitory/dormitory-application/dormitory-application");
   }
 </script>
 
