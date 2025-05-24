@@ -82,5 +82,6 @@
     "locale" : "auto",
     "uniStatistics" : {
         "version" : "2"
-    }
+    },
+    "fallbackLocale" : "zh-Hans"
 }

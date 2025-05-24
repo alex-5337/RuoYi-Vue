@@ -72,7 +72,7 @@
     }
   },
   {
-  	"path" : "pages/dormitory/dormitory-application/dormitory-application",
+  	"path" : "pages/proj/dormitory/dormitory-application/index",
   	"style" : 
   	{
   		"navigationBarTitleText" : "宿舍申请"
