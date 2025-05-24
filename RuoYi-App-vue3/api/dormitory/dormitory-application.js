@@ -42,3 +42,17 @@ export function delProjTenantInfo(tenantId) {
     method: 'delete'
   })
 }
+
+//执行后续操作
+export function afterDo(response,proxy){
+	if(response.code=='200'){
+		if(response.msg=='操作成功'){
+			proxy.$modal.msgSuccess()
+		}else{
+			proxy.$modal.msg(response.msg)
+		}
+	}else{
+		proxy.$modal.msg(response.code)
+	}
+	proxy.$tab.navigateBack();
+}

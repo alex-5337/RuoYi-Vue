@@ -91,7 +91,7 @@
   }
 
   function changeGrid(e) {
-    proxy.$tab.reLaunch("/pages/dormitory/dormitory-application/dormitory-application");
+    proxy.$tab.navigateTo("/pages/dormitory/dormitory-application/dormitory-application");
   }
 </script>
 
