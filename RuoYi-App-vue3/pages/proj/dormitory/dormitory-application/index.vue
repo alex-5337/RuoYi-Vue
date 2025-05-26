@@ -104,255 +104,286 @@
 			<p class="textarea-tip">最多可输入200字</p>
 		</el-card>
 
-		<div class="footer">
-			<el-button class="submit-btn" type="primary">提交申请</el-button>
+		<div class="footer" style="display: flex; gap: 10px;">
+			<!-- <el-button class="cache-btn btn-size" type="warning" @click="handleCache">缓存</el-button> -->
+			<el-button class="submit-btn btn-size" type="primary" @click="handleSubmit">提交</el-button>
 		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import {
-	QuestionFilled,
-	Camera,
-	Calendar,
-	ArrowDown,
-} from '@element-plus/icons-vue';
-import { getUserProfile } from '@/api/system/user.js';
-import { getDicts } from '@/api/system/dict/data.js';
-import { listDept } from '@/api/dept.js'
-import { arrayToTree } from '@/utils/treeUtil.js'
+	import { ref, watch, getCurrentInstance } from 'vue';
+	import { Camera } from '@element-plus/icons-vue';
+	import { getUserProfile } from '@/api/system/user';
+	import { getDicts } from '@/api/system/dict/data';
+	import { listDept } from '@/api/dept'
+	import { arrayToTree } from '@/utils/treeUtil'
+	import { updateProjTenantInfo, addProjTenantInfo, afterDo } from '@/api/proj/dormitory/dormitory-application'
 
-const queryParams = ref({
-	userId: null,
-	idCard: null,
-	name: null,
-	phone: null,
-	email: null,
-	address: null,
-	isDeleted: 'N',
-	deleteTime: null,
-	gender: null,
-	age: null,
-	birthday: null,
-	ethnicity: null,
-	education: null,
-	company: null,
-	hireDate: null,
-	leaveDate: null,
-	avatar: null,
-	isEmployed: 'Y',
-	leaveReason: null,
-	resignationCert: null,
-	department: null,
-	position: null,
-	jobLevel: null,
-	employeeId: null,
-	creator: null,
-	modifier: null,
-	licensePlate: null,
-	emergencyContact: null,
-	emergencyPhone: null,
-	maritalStatus: null,
-	contactAddress: null,
-	entryTime: null,
-	applyReason: null,
-	renewalReason: null,
-	statue: null
-})
-
-const sys_user_sex = ref([])
-const departments = ref([]);
-// const positions = ref([
-// 	{ id: 1, name: '前端开发工程师' },
-// 	{ id: 2, name: 'UI设计师' },
-// 	{ id: 3, name: '产品经理' },
-// 	{ id: 4, name: '人力资源专员' },
-// 	{ id: 5, name: '财务主管' },
-// ]);
-
-
-// 调用 getUserProfile 方法获取用户个人信息，当请求成功后执行回调函数
-getUserProfile().then(response => {
-	queryParams.value.userId = response.data.userId;
-	//queryParams.value.company = response.data.dept.ancestors.split(',')[0] || '0';
-	queryParams.value.department = response.data.deptId;
-	queryParams.value.phone = response.data.phonenumber;
-	queryParams.value.gender = response.data.sex;
-	queryParams.value.name = response.data.nickName;
-	queryParams.value.hireDate = response.data.createTime;
-	// console.log(queryParams.value.userId)
-})
-
-// 调用 getDicts 方法获取系统用户性别字典数据，当请求成功后执行回调函数
-getDicts('sys_user_sex').then(response => {
-	sys_user_sex.value = response.data
-})
-
-
-// 调用 listDept 方法获取部门列表数据，当请求成功后执行回调函数
-listDept().then(response => {
-	departments.value = arrayToTree(response.data, {
-		idKey: 'deptId',
-		parentKey: 'parentId',
-		childrenKey: 'children'
-
+	const { proxy } = getCurrentInstance()
+	const queryParams = ref({
+		tenantId: null,
+		userId: null,
+		idCard: null,
+		name: null,
+		phone: null,
+		email: null,
+		address: null,
+		isDeleted: 'N',
+		deleteTime: null,
+		gender: null,
+		age: null,
+		birthday: null,
+		ethnicity: null,
+		education: null,
+		company: null,
+		hireDate: null,
+		leaveDate: null,
+		avatar: null,
+		isEmployed: 'Y',
+		leaveReason: null,
+		resignationCert: null,
+		department: null,
+		position: null,
+		jobLevel: null,
+		employeeId: null,
+		creator: null,
+		modifier: null,
+		licensePlate: null,
+		emergencyContact: null,
+		emergencyPhone: null,
+		maritalStatus: null,
+		contactAddress: null,
+		entryTime: null,
+		applyReason: '',
+		renewalReason: null,
+		statue: '发起申请'
 	})
-})
+
+	const sys_user_sex = ref([])
+	const departments = ref([]);
+	// const positions = ref([
+	// 	{ id: 1, name: '前端开发工程师' },
+	// 	{ id: 2, name: 'UI设计师' },
+	// 	{ id: 3, name: '产品经理' },
+	// 	{ id: 4, name: '人力资源专员' },
+	// 	{ id: 5, name: '财务主管' },
+	// ]);
+
+	// const handleCache = () => {
+	// 	// 缓存表单数据到本地存储中，键名为 'formData'，值为 queryParams.value 对象
+	// 	localStorage.setItem('formData', JSON.stringify(queryParams.value));
+	// }
+	
+	const handleSubmit = () => {
+		if(queryParams.value.tenantId == null){
+			addProjTenantInfo(queryParams.value).then(response => {
+				localStorage.removeItem('formData')
+				//afterDo(response, proxy)
+			})
+		}else{
+			updateProjTenantInfo(queryParams.value).then(response => {
+				afterDo(response, proxy)
+			})
+		}	
+	}
+	function getQueryParams() {
+		// 从本地存储中获取 'formData' 键值
+		const formData = localStorage.getItem('formData');
+		// 如果 'formData' 键值存在，则将其解析为 JSON 对象并赋值给 queryParams.value 对象
+		if (formData) {
+			queryParams.value = JSON.parse(formData);
+		} else {
+			// 调用 getUserProfile 方法获取用户个人信息，当请求成功后执行回调函数
+			getUserProfile().then(response => {
+				queryParams.value.userId = response.data.userId;
+				//queryParams.value.company = response.data.dept.ancestors.split(',')[0] || '0';
+				queryParams.value.department = response.data.deptId;
+				queryParams.value.phone = response.data.phonenumber;
+				queryParams.value.gender = response.data.sex;
+				queryParams.value.name = response.data.nickName;
+				queryParams.value.hireDate = response.data.createTime;
+				// console.log(queryParams.value.userId)
+			})
+
+			// 调用 getDicts 方法获取系统用户性别字典数据，当请求成功后执行回调函数
+			getDicts('sys_user_sex').then(response => {
+				sys_user_sex.value = response.data
+			})
+
+			// 调用 listDept 方法获取部门列表数据，当请求成功后执行回调函数
+			listDept().then(response => {
+				departments.value = arrayToTree(response.data, {
+					idKey: 'deptId',
+					parentKey: 'parentId',
+					childrenKey: 'children'
+				})
+			})
+		}
+	}
+
+	getQueryParams()
+
+	// 监听 queryParams.value 对象的变化，当值发生变化时执行回调函数
+	watch(queryParams.value, (newValue, oldValue) => {
+		// 缓存表单数据到本地存储中，键名为 'formData'，值为 queryParams.value 对象
+		localStorage.setItem('formData', JSON.stringify(queryParams.value));
+	})
 </script>
 
 <style scoped>
-.container {
-	padding: 8px 12px 60px;
-	max-width: 375px;
-	margin: 0 auto;
-}
+	.container {
+		padding: 8px 12px 60px;
+		max-width: 375px;
+		margin: 0 auto;
+	}
 
-.header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 10px 0;
-	position: sticky;
-	top: 0;
-	background-color: #fff;
-	z-index: 10;
-}
+	.header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 10px 0;
+		position: sticky;
+		top: 0;
+		background-color: #fff;
+		z-index: 10;
+	}
 
-.header-title {
-	font-size: 18px;
-	font-weight: bold;
-	color: #333;
-	margin: 0;
-}
+	.header-title {
+		font-size: 18px;
+		font-weight: bold;
+		color: #333;
+		margin: 0;
+	}
 
-.tip {
-	display: flex;
-	align-items: center;
-	margin-bottom: 16px;
-	font-size: 12px;
-	color: #666;
-}
+	.tip {
+		display: flex;
+		align-items: center;
+		margin-bottom: 16px;
+		font-size: 12px;
+		color: #666;
+	}
 
-.required {
-	color: #f56c6c;
-	margin: 0 2px;
-}
+	.required {
+		color: #f56c6c;
+		margin: 0 2px;
+	}
 
-.card {
-	margin-bottom: 12px;
-}
+	.card {
+		margin-bottom: 12px;
+	}
 
-.card-title {
-	font-size: 16px;
-	font-weight: 600;
-	margin-bottom: 16px;
-	color: #333;
-}
+	.card-title {
+		font-size: 16px;
+		font-weight: 600;
+		margin-bottom: 16px;
+		color: #333;
+	}
 
-.id-card-upload {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	padding: 30px 0;
-	border: 1px dashed #ddd;
-	border-radius: 8px;
-	margin-bottom: 16px;
-}
+	.id-card-upload {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 30px 0;
+		border: 1px dashed #ddd;
+		border-radius: 8px;
+		margin-bottom: 16px;
+	}
 
-.upload-btn {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 150px;
-	height: 40px;
-}
+	.upload-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 150px;
+		height: 40px;
+	}
 
-.btn-text {
-	margin-left: 6px;
-	font-size: 14px;
-}
+	.btn-text {
+		margin-left: 6px;
+		font-size: 14px;
+	}
 
-.upload-tip {
-	font-size: 12px;
-	color: #999;
-	margin-top: 12px;
-}
+	.upload-tip {
+		font-size: 12px;
+		color: #999;
+		margin-top: 12px;
+	}
 
-.form-group {
-	margin-bottom: 16px;
-}
+	.form-group {
+		margin-bottom: 16px;
+	}
 
-.form-row {
-	display: flex;
-	justify-content: space-between;
-	margin-bottom: 16px;
-}
+	.form-row {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 16px;
+	}
 
-.form-col {
-	width: 48%;
-}
+	.form-col {
+		width: 48%;
+	}
 
-.form-label {
-	display: block;
-	font-size: 14px;
-	color: #333;
-	margin-bottom: 8px;
-}
+	.form-label {
+		display: block;
+		font-size: 14px;
+		color: #333;
+		margin-bottom: 8px;
+	}
 
-.form-input {
-	width: 100%;
-}
+	.form-input {
+		width: 100%;
+	}
 
-.date-picker,
-.select-wrapper {
-	position: relative;
-}
+	.date-picker,
+	.select-wrapper {
+		position: relative;
+	}
 
-.date-picker .el-icon,
-.select-wrapper .el-icon {
-	position: absolute;
-	right: 10px;
-	top: 50%;
-	transform: translateY(-50%);
-	z-index: 2;
-}
+	.date-picker .el-icon,
+	.select-wrapper .el-icon {
+		position: absolute;
+		right: 10px;
+		top: 50%;
+		transform: translateY(-50%);
+		z-index: 2;
+	}
 
-.form-textarea {
-	width: 100%;
-}
+	.form-textarea {
+		width: 100%;
+	}
 
-:deep(.el-date-editor.el-input) {
-	width: 100%;
-}
+	:deep(.el-date-editor.el-input) {
+		width: 100%;
+	}
 
-.textarea-tip {
-	font-size: 12px;
-	color: #999;
-	margin-top: 6px;
-}
+	.textarea-tip {
+		font-size: 12px;
+		color: #999;
+		margin-top: 6px;
+	}
 
-.footer {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	padding: 12px;
-	background-color: #fff;
-	box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.05);
-}
+	.footer {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 12px;
+		background-color: #fff;
+		box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.05);
+	}
 
-.submit-btn {
-	width: 100%;
-	height: 48px;
-	font-size: 16px;
-}
+	.cache-btn,
+	.submit-btn {
+		width: 100%;
+		height: 48px;
+		font-size: 16px;
+	}
 
-.container[data-v-e8bcc958] {
-	padding: 8px 12px 72px;
-	/* 修改了这里 */
-	max-width: 375px;
-	margin: 0 auto;
-}
+	.container[data-v-e8bcc958] {
+		padding: 8px 12px 72px;
+		/* 修改了这里 */
+		max-width: 375px;
+		margin: 0 auto;
+	}
 </style>
